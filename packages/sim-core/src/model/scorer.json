@@ -1,0 +1,3 @@
+{ "weights": { "threat": 0.40, "time": 0.25, "zone": 0.15, "dist": 0.15, "group": 0.05 },
+  "zone_values": { "restricted": 1.0, "warning": 0.6, "safe": 0.2 },
+  "notes": "Single source of truth for the rule-based hybrid threat scorer. Read by threat.js (app) and by ml/src/skyshield_ml/scorer.py (evaluation)." }

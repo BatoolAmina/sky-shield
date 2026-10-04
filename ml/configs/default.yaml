@@ -1,0 +1,16 @@
+# All values are STARTING points from the synopsis; tuning uses validation seeds only.
+data_dir: data/v1
+data_dir_ab: data/v1_ab          # same seeds, alpha-beta tracker (tracker ablation)
+out_dir: results/v1
+random_state: 0
+tune_trials: 24                  # Optuna if installed, otherwise random search
+tune_stride: 2                   # tuning subsample: every 2nd training window
+tune_max_iter: 250
+rf_trees: 150
+rf_seeds: [0, 1, 2]
+mlp_seeds: [0, 1, 2]
+mlp_max_epochs: 40
+mlp_patience: 6
+cost_miss_over_false_alarm: 5.0  # a missed threat costs 5x a false alarm when choosing the threat threshold
+n_boot: 400
+shap_samples_per_class: 150

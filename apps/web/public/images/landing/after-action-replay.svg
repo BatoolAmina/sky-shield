@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="40" y1="30" x2="910" y2="540" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102439"/>
+      <stop offset="1" stop-color="#070d18"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(0 244 -426 0 480 277)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1d95df" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#07111b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h960v540H0z"/>
+  <path fill="url(#glow)" d="M0 0h960v540H0z"/>
+  <rect x="28" y="25" width="904" height="490" rx="15" fill="#081321" fill-opacity=".76" stroke="#82b6dd" stroke-opacity=".2"/>
+  <text x="54" y="58" fill="#98c9ec" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">AFTER-ACTION REVIEW / REPLAY</text>
+  <rect x="54" y="84" width="516" height="282" rx="10" fill="#0a1826" stroke="#81b4d8" stroke-opacity=".2"/>
+  <text x="78" y="117" fill="#8daac3" font-family="Arial,sans-serif" font-size="10" letter-spacing="1.5">TRACK HISTORY</text>
+  <path stroke="#7095b7" stroke-opacity=".24" d="M92 155h440M92 211h440M92 267h440M92 323h440M92 145v190M202 145v190M312 145v190M422 145v190M532 145v190"/>
+  <path stroke="#60c8ff" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 11" d="m103 301 79-64 80 12 83-81 83 26 90-78"/>
+  <path stroke="#ffc979" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 9" d="m103 301 76-52 83 14 83-72 83 31 90-102"/>
+  <circle cx="183" cy="237" r="7" fill="#5dc8ff"/>
+  <circle cx="345" cy="168" r="7" fill="#5dc8ff"/>
+  <circle cx="508" cy="116" r="7" fill="#5dc8ff"/>
+  <path stroke="#a9cbeb" stroke-opacity=".34" d="M183 237v44m162-113v44m163-96v44"/>
+  <text x="99" y="350" fill="#6f8ba5" font-family="Arial,sans-serif" font-size="9">T+00:00</text>
+  <text x="467" y="350" fill="#6f8ba5" font-family="Arial,sans-serif" font-size="9">T+08:30</text>
+  <rect x="590" y="84" width="316" height="282" rx="10" fill="#0a1826" stroke="#81b4d8" stroke-opacity=".2"/>
+  <text x="616" y="117" fill="#8daac3" font-family="Arial,sans-serif" font-size="10" letter-spacing="1.5">SESSION NOTES</text>
+  <circle cx="625" cy="157" r="5" fill="#5dc8ff"/>
+  <text x="644" y="161" fill="#d5e7f6" font-family="Arial,sans-serif" font-size="12">First report received</text>
+  <text x="870" y="161" fill="#7f9bb6" font-family="Arial,sans-serif" font-size="10" text-anchor="end">00:42</text>
+  <path stroke="#7193b1" stroke-opacity=".2" d="M616 179h264"/>
+  <circle cx="625" cy="208" r="5" fill="#eab96d"/>
+  <text x="644" y="212" fill="#d5e7f6" font-family="Arial,sans-serif" font-size="12">Evidence re-evaluated</text>
+  <text x="870" y="212" fill="#7f9bb6" font-family="Arial,sans-serif" font-size="10" text-anchor="end">03:16</text>
+  <path stroke="#7193b1" stroke-opacity=".2" d="M616 230h264"/>
+  <circle cx="625" cy="259" r="5" fill="#84d5b0"/>
+  <text x="644" y="263" fill="#d5e7f6" font-family="Arial,sans-serif" font-size="12">Decision recorded</text>
+  <text x="870" y="263" fill="#7f9bb6" font-family="Arial,sans-serif" font-size="10" text-anchor="end">05:08</text>
+  <rect x="616" y="296" width="264" height="42" rx="6" fill="#112337"/>
+  <text x="632" y="322" fill="#9db9d2" font-family="Arial,sans-serif" font-size="10">Ground truth revealed after the run</text>
+  <rect x="54" y="390" width="852" height="78" rx="10" fill="#0b1725" stroke="#81b4d8" stroke-opacity=".18"/>
+  <circle cx="91" cy="429" r="19" fill="#12395a" stroke="#68c7ff" stroke-opacity=".48"/>
+  <path fill="#a9e2ff" d="m87 419 14 10-14 10v-20Z"/>
+  <path stroke="#43627e" stroke-linecap="round" stroke-width="5" d="M135 429h735"/>
+  <path stroke="#53bdff" stroke-linecap="round" stroke-width="5" d="M135 429h428"/>
+  <circle cx="563" cy="429" r="8" fill="#c1edff"/>
+  <text x="135" y="452" fill="#7794af" font-family="Arial,sans-serif" font-size="9">REPLAY TIMELINE</text>
+  <text x="870" y="452" fill="#7794af" font-family="Arial,sans-serif" font-size="9" text-anchor="end">08:30</text>
+</svg>

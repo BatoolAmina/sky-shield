@@ -1,0 +1,27 @@
+node_modules/
+.env
+.env.*
+!.env.example
+apps/web/dist/
+__pycache__/
+.venv/
+# Generated training datasets are reproducible with the datagen pipeline.
+data/*
+!data/README.md
+
+# Keep the runtime mentor and project reports; omit generated predictions, figures and model zoo artifacts.
+results/*
+!results/v1/
+results/v1/*
+!results/v1/REPORT.md
+!results/v1/MODEL_CARD.md
+!results/v1/DATA_CARD.md
+!results/v1/model/
+results/v1/model/*
+!results/v1/model/model.json
+!results/v1/metrics/
+results/v1/metrics/*
+!results/v1/metrics/primary_summary.json
+
+results/*/models/random_forest_*.joblib
+data/db.json

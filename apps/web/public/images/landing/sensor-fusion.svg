@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="74" y1="20" x2="914" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102646"/>
+      <stop offset="1" stop-color="#050b17"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(0 244 -248 0 346 265)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#168cff" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#07111f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sweep" x1="349" y1="270" x2="558" y2="99" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#36aaff" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#36aaff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h960v540H0z"/>
+  <path fill="url(#glow)" d="M0 0h700v540H0z"/>
+  <path stroke="#9ac9ff" stroke-opacity=".09" d="M0 76h960M0 464h960"/>
+  <rect x="28" y="25" width="904" height="490" rx="15" fill="#081321" fill-opacity=".72" stroke="#92beef" stroke-opacity=".19"/>
+  <text x="54" y="58" fill="#9fc9fa" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">SENSOR FUSION / TRAINING EXERCISE</text>
+  <circle cx="354" cy="270" r="186" fill="#0a1a2b" stroke="#5187bc" stroke-opacity=".42"/>
+  <circle cx="354" cy="270" r="139" stroke="#7bbaff" stroke-opacity=".23"/>
+  <circle cx="354" cy="270" r="92" stroke="#7bbaff" stroke-opacity=".23"/>
+  <circle cx="354" cy="270" r="46" stroke="#7bbaff" stroke-opacity=".23"/>
+  <path stroke="#7bbaff" stroke-opacity=".18" d="M168 270h372M354 84v372"/>
+  <path fill="url(#sweep)" d="M354 270V84c102 0 186 84 186 186H354Z"/>
+  <path stroke="#38b8ff" stroke-opacity=".7" d="M354 270 481 134"/>
+  <circle cx="354" cy="270" r="5" fill="#bde7ff"/>
+  <circle cx="274" cy="178" r="8" fill="#58c8ff"/>
+  <circle cx="274" cy="178" r="19" stroke="#58c8ff" stroke-opacity=".48"/>
+  <path stroke="#70caff" stroke-opacity=".72" d="m274 178-93-40"/>
+  <circle cx="456" cy="322" r="7" fill="#79d8ff"/>
+  <path stroke="#79d8ff" stroke-opacity=".64" d="m456 322 79 56"/>
+  <circle cx="402" cy="174" r="5" fill="#88a9d0"/>
+  <circle cx="419" cy="183" r="4" fill="#88a9d0"/>
+  <circle cx="430" cy="167" r="4" fill="#88a9d0"/>
+  <rect x="546" y="94" width="342" height="344" rx="10" fill="#0b1728" stroke="#83b7ef" stroke-opacity=".18"/>
+  <text x="572" y="128" fill="#93b9e5" font-family="Arial,sans-serif" font-size="11" letter-spacing="2">TRACK ASSESSMENT</text>
+  <text x="572" y="174" fill="#e6f3ff" font-family="Arial,sans-serif" font-size="25" font-weight="600">Track 024</text>
+  <rect x="572" y="194" width="112" height="25" rx="12.5" fill="#123656"/>
+  <circle cx="588" cy="206.5" r="4" fill="#63ceff"/>
+  <text x="601" y="211" fill="#a9dfff" font-family="Arial,sans-serif" font-size="10" letter-spacing="1">UNCERTAIN</text>
+  <path stroke="#7193b7" stroke-opacity=".23" d="M572 242h290"/>
+  <text x="572" y="271" fill="#7f9cba" font-family="Arial,sans-serif" font-size="10" letter-spacing="1.5">SENSOR REPORTS</text>
+  <text x="572" y="307" fill="#c5d9ef" font-family="Arial,sans-serif" font-size="12">RADAR</text>
+  <text x="852" y="307" fill="#7bcaff" font-family="Arial,sans-serif" font-size="10" text-anchor="end">FAINT RETURN</text>
+  <path stroke="#8eb4da" stroke-opacity=".2" d="M572 321h290"/>
+  <text x="572" y="350" fill="#c5d9ef" font-family="Arial,sans-serif" font-size="12">RF / EO</text>
+  <text x="852" y="350" fill="#f3c87d" font-family="Arial,sans-serif" font-size="10" text-anchor="end">NOT CONFIRMED</text>
+  <rect x="572" y="378" width="290" height="38" rx="6" fill="#101f32"/>
+  <text x="589" y="402" fill="#96b2d0" font-family="Arial,sans-serif" font-size="11">Review evidence before deciding.</text>
+  <text x="54" y="490" fill="#6f91b7" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.6">SYNTHETIC AIRSPACE · NOT LIVE DATA</text>
+</svg>

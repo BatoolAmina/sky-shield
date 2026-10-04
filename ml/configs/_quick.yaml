@@ -1,0 +1,17 @@
+cost_miss_over_false_alarm: 5.0
+data_dir: data/quick
+data_dir_ab: data/quick_ab
+mlp_max_epochs: 8
+mlp_patience: 6
+mlp_seeds:
+- 0
+n_boot: 100
+out_dir: results/quick
+random_state: 0
+rf_seeds:
+- 0
+rf_trees: 60
+shap_samples_per_class: 40
+tune_max_iter: 250
+tune_stride: 2
+tune_trials: 4

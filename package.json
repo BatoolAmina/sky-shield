@@ -1,0 +1,17 @@
+{
+  "name": "skyshield-trainer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SkyShield Trainer (SIH26247): AI-enabled drone / counter-drone training simulator (plain JavaScript, ESM)",
+  "workspaces": ["apps/server", "apps/web"],
+  "engines": { "node": ">=20" },
+  "dependencies": { "dotenv": "^16.4.7" },
+  "scripts": {
+    "test:sim": "node --test \"packages/sim-core/test/*.test.js\"",
+    "test:server": "node --test \"apps/server/test/*.test.js\"",
+    "datagen": "node apps/datagen/src/cli.js",
+    "server": "node apps/server/src/index.js",
+    "web": "npm --workspace apps/web run dev"
+  }
+}
