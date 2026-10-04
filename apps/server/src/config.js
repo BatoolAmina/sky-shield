@@ -9,6 +9,7 @@ export function loadConfig(env = process.env) {
     port: +(env.PORT ?? 4000), jwtSecret: secret, jwtGenerated: !env.JWT_SECRET,
     instructorCode: env.INSTRUCTOR_CODE ?? 'instructor-demo', adminCode: env.ADMIN_CODE ?? null,
     googleClientId: env.GOOGLE_CLIENT_ID ?? null,
+    webOrigins: (env.WEB_ORIGINS ?? '').split(',').map((origin) => origin.trim()).filter(Boolean),
     modelPath: env.MODEL_PATH ?? resolve(root, 'results/v1/model/model.json'),
     summaryPath: env.MODEL_SUMMARY ?? resolve(root, 'results/v1/metrics/primary_summary.json'),
     dataFile: env.DATA_FILE ?? null, mongoUri: env.MONGO_URI ?? null, webDist: resolve(root, 'apps/web/dist'),
