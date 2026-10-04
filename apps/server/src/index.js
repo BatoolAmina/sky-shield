@@ -19,11 +19,25 @@ const manager = new SessionManager({ store, model }), api = createApi({ store, m
 const { default: express } = await import('express'), { WebSocketServer } = await import('ws');
 const app = express(); app.disable('x-powered-by'); app.use(express.json({ limit: '100kb' }));
 app.use((req, res, next) => { res.set({ 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Referrer-Policy': 'no-referrer' }); next(); });
+app.use('/api', (req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && config.webOrigins.includes(origin)) {
+    res.set({
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,OPTIONS',
+      'Access-Control-Allow-Headers': 'Authorization,Content-Type,Cache-Control',
+      'Vary': 'Origin',
+    });
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(origin && !config.webOrigins.includes(origin) ? 403 : 204);
+  next();
+});
 app.all('/api/*', async (req, res) => { const r = await api.handle(req.method, req.path, { body: req.body, headers: req.headers, ip: req.ip }); res.status(r.status).json(r.body); });
 if (existsSync(config.webDist)) { app.use(express.static(config.webDist)); app.get('*', (req, res) => res.sendFile('index.html', { root: config.webDist })); }
 
 const server = http.createServer(app), wss = new WebSocketServer({ server, path: '/ws', maxPayload: 64 * 1024 }), msgLimit = rateLimiter(60, 1000);
 wss.on('connection', async (ws, req) => {
+  if (config.webOrigins.length && !config.webOrigins.includes(req.headers.origin)) return ws.close(1008, 'origin not allowed');
   const q = new URL(req.url, 'http://x').searchParams, p = verifyToken(q.get('token'), config.jwtSecret), user = p && (await store.findOne('users', { _id: p.sub }));
   const send = (m) => ws.readyState === 1 && ws.send(JSON.stringify(m));
   if (!user) { send({ type: 'error', error: 'unauthorised' }); return ws.close(); }
