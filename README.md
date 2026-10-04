@@ -50,6 +50,10 @@ Open `http://localhost:5173`. The frontend proxies REST and WebSocket requests t
 
 Copy `.env.example` to `.env` in the repository root, then set a private `JWT_SECRET` and `INSTRUCTOR_CODE` before deploying. The server reads this file on startup. If `JWT_SECRET` is empty, it generates a temporary key and existing login sessions will expire when the server restarts.
 
+### Vercel frontend deployment
+
+Vercel can host the static React/Vite frontend, but the session backend must run on a persistent Node.js host that supports WebSockets. Import the repository using the root directory and the settings in `vercel.json`. Set `VITE_API_URL` in Vercel to the backend's HTTPS origin, then set `WEB_ORIGINS` on the backend to the exact Vercel frontend origin(s), including any preview origins you intend to use. Rebuild the frontend after setting `VITE_API_URL`. Configure MongoDB and the server secrets on the backend host; do not put server secrets in Vercel's frontend environment.
+
 Google sign-in is optional. To enable it, create an OAuth **Web application** client in Google Cloud Console, add the app origin (for local development, `http://localhost:5173`) to its Authorized JavaScript origins, then put its client ID in the root `.env` as `GOOGLE_CLIENT_ID`. No client secret is used in the browser. The server validates Google's signed identity token, audience, issuer and verified-email claim before creating or signing into an account. Google sign-in is unavailable until this client ID is configured.
 
 The server loads `results/v1/model/model.json` (the mentor). If it is missing the app still runs with the mentor disabled. Other settings: `PORT`, `ADMIN_CODE` (blank = admin sign-up disabled), `MONGO_URI` (otherwise `DATA_FILE` selects JSON persistence; blank uses in-memory storage), and `MODEL_PATH`.
