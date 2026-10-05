@@ -1420,3 +1420,36 @@ body,button,input,select,textarea{font-family:Oxanium,"Poppins",system-ui,"Segoe
 @media(max-width:680px){
   .app-theme-toggle{padding:0 8px!important;font-size:10px!important}
 }
+
+.app[data-theme="light"] .dashboard-brief-heading>span{color:#2868a7}
+.app[data-theme="light"] .dashboard-brief-heading button,.app[data-theme="light"] .dashboard-alert button{border-color:rgba(44,78,122,.16)!important;background:rgba(51,123,194,.05)!important;color:#426284}
+.app[data-theme="light"] .dashboard-brief-roe{border-color:rgba(44,78,122,.13);background:rgba(51,123,194,.035)}
+.app[data-theme="light"] .dashboard-brief-roe>b{color:#294969}
+.app[data-theme="light"] .dashboard-brief-roe ul{color:#536b88}
+.app[data-theme="light"] .dashboard-secondary-action{border-color:rgba(44,78,122,.18);background:rgba(51,123,194,.045);color:#31577f}
+.app[data-theme="light"] .dashboard-secondary-action:hover{border-color:rgba(44,102,165,.35);color:#174f8d}
+.app[data-theme="light"] .dashboard-recommended{border-color:rgba(44,102,165,.18);background:rgba(51,123,194,.07);color:#2868a7}
+.app[data-theme="light"] .dashboard-adaptive{background:rgba(115,87,190,.09);color:#684fa4!important}
+.app[data-theme="light"] .dashboard-mentor-status{color:#536d8e}
+.app[data-theme="light"] .dashboard-empty-state{border-color:rgba(44,78,122,.2);color:#617995}
+.app[data-theme="light"] .dashboard-instructor-options{border-color:rgba(44,78,122,.14);background:rgba(51,123,194,.035)}
+.app[data-theme="light"] .dashboard-instructor-options b{color:#294969}
+.app[data-theme="light"] .dashboard-instructor-options>div:first-child span{color:#617995}
+.app[data-theme="light"] .app .dashboard-option-fields input{border-color:rgba(44,78,122,.18);background:#fff;color:#1e3553}
+.app[data-theme="light"] .app .dashboard-option-fields input::placeholder{color:#7489a4}
+
+@media(max-width:520px){
+  .app .dashboard-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .app .dashboard-summary-card:nth-child(3){grid-column:1/-1}
+  .app .dashboard-summary-card small{font-size:7px;letter-spacing:.045em}
+  .app .dashboard-summary-note{font-size:8px}
+  .app .dashboard-section-title{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+  .app .dashboard-section-actions{width:100%;justify-content:space-between}
+}
+@media(max-width:420px){
+  .app .app-nav{flex-wrap:wrap;row-gap:9px}
+  .app .app-nav-links{width:100%;justify-content:flex-start}
+  .app .app-user{margin-left:0}
+  .app .dashboard-summary-card{min-width:0}
+  .app .dashboard-summary-card>div{min-width:0}
+}
