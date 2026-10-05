@@ -1109,7 +1109,7 @@ body,button,input,select,textarea{font-family:Oxanium,"Poppins",system-ui,"Segoe
 .dashboard-option-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .app .dashboard-option-fields input{width:100%;min-width:0;padding:9px 10px;border-color:rgba(142,177,229,.16);border-radius:7px;background:rgba(5,9,17,.7);color:#e4f2ff;font-family:inherit;font-size:9px}
 .app .dashboard-option-fields input::placeholder{color:#768aa6}
-.dashboard-brief{margin-bottom:14px;padding:17px;border:1px solid rgba(121,187,255,.25);border-radius:12px;background:radial-gradient(ellipse at 100% 0,rgba(65,142,220,.11),transparent 45%),var(--dash-card)}
+.dashboard-brief{scroll-margin-top:90px;margin-bottom:14px;padding:17px;border:1px solid rgba(121,187,255,.25);border-radius:12px;background:radial-gradient(ellipse at 100% 0,rgba(65,142,220,.11),transparent 45%),var(--dash-card)}
 .dashboard-brief-heading{display:flex;align-items:center;justify-content:space-between}
 .dashboard-brief-heading>span{display:flex;align-items:center;gap:7px;color:#9fd3ff;font-size:8px;font-weight:650;letter-spacing:.1em}
 .dashboard-brief>h3{margin:12px 0 5px;color:#f0f6ff;font-size:18px;font-weight:500}
@@ -1437,6 +1437,8 @@ body,button,input,select,textarea{font-family:Oxanium,"Poppins",system-ui,"Segoe
 .app[data-theme="light"] .dashboard-instructor-options>div:first-child span{color:#617995}
 .app[data-theme="light"] .app .dashboard-option-fields input{border-color:rgba(44,78,122,.18);background:#fff;color:#1e3553}
 .app[data-theme="light"] .app .dashboard-option-fields input::placeholder{color:#7489a4}
+.app .dashboard-brief-heading>button{flex:0 0 28px;padding:0!important;line-height:0}
+.app .dashboard-brief-heading>button svg{display:block}
 
 @media(max-width:520px){
   .app .dashboard-summary{grid-template-columns:repeat(2,minmax(0,1fr))}

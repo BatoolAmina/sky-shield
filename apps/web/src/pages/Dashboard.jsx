@@ -21,6 +21,7 @@ const formatDate = (date) => date ? new Date(date).toLocaleDateString(undefined,
 export default function Dashboard({ user, onUser, go }) {
   const [brief, setBrief] = useState(null), [rec, setRec] = useState(null), [overview, setOverview] = useState(null), [sc, setSc] = useState([]), [ses, setSes] = useState([]), [model, setModel] = useState(null), [lb, setLb] = useState([]), [err, setErr] = useState(''), [loading, setLoading] = useState(true), [refreshing, setRefreshing] = useState(false), [starting, setStarting] = useState(false), [updatedAt, setUpdatedAt] = useState(null), [realtime, setRealtime] = useState(false);
   const loaded = useRef(false);
+  const briefRef = useRef(null);
 
   const loadDashboard = useCallback(async () => {
     if (loaded.current) setRefreshing(true);
@@ -52,6 +53,12 @@ export default function Dashboard({ user, onUser, go }) {
     window.addEventListener('focus', onFocus);
     return () => { stopWatching(); window.clearInterval(timer); window.removeEventListener('focus', onFocus); };
   }, [loadDashboard]);
+
+  useEffect(() => {
+    if (!brief) return;
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    briefRef.current?.scrollIntoView({ behavior, block: 'start' });
+  }, [brief]);
 
   const start = async (id) => {
     setStarting(true);
@@ -108,7 +115,7 @@ export default function Dashboard({ user, onUser, go }) {
           <div className="dashboard-section-actions"><button type="button" className="dashboard-refresh-button" onClick={loadDashboard} disabled={refreshing}><DashboardIcon name="radar" size={14} /> {refreshing ? 'Updating' : 'Refresh'}</button><span className="scenario-count">{sc.length.toString().padStart(2, '0')} SCENARIOS</span></div>
         </div>
 
-        {brief && <article className="dashboard-brief">
+        {brief && <article ref={briefRef} className="dashboard-brief">
           <div className="dashboard-brief-heading"><span><DashboardIcon name="radar" size={17} /> EXERCISE BRIEFING</span><button type="button" onClick={() => setBrief(null)} aria-label="Close briefing"><DashboardIcon name="close" /></button></div>
           <h3>{brief.name}</h3><p>{brief.brief}</p><p className="dashboard-brief-note">{ASSETS}</p>
           <div className="dashboard-brief-roe"><b>Rules of engagement</b><ul>{ROE_TEXT.map((rule) => <li key={rule}>{rule}</li>)}</ul></div>
