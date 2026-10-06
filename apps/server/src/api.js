@@ -87,7 +87,7 @@ export function createApi({ store, manager, config, modelSummary = null, googleV
   const tokenFor = (u) => signToken({ sub: u._id, role: u.role }, config.jwtSecret);
 
   route('GET', '/api/health', async () => ({ ok: true, mentor: !!manager.model }), { auth: false });
-  route('GET', '/api/auth/config', async () => ({ googleClientId: config.googleClientId }), { auth: false });
+  route('GET', '/api/auth/config', async () => ({ googleClientId: config.googleClientId, adminSignupEnabled: Boolean(config.adminCode) }), { auth: false });
   route('GET', '/api/site-content', async () => {
     const saved = await store.findOne('settings', settingKey('site-content'));
     return siteContent(saved);

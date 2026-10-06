@@ -57,7 +57,7 @@ Vercel can host the static React/Vite frontend, but the session backend must run
 Google sign-in is optional. To enable it, create an OAuth **Web application** client in Google Cloud Console, add the app origin (for local development, `http://localhost:5173`) to its Authorized JavaScript origins, then put its client ID in the root `.env` as `GOOGLE_CLIENT_ID`. No client secret is used in the browser. The server validates Google's signed identity token, audience, issuer and verified-email claim before creating or signing into an account. Google sign-in is unavailable until this client ID is configured.
 
 The server loads `results/v1/model/model.json` (the mentor). If it is missing the app still runs with the mentor disabled. Other settings: `PORT`, `ADMIN_CODE` (blank = admin sign-up disabled), `MONGO_URI` (otherwise `DATA_FILE` selects JSON persistence; blank uses in-memory storage), and `MODEL_PATH`.
-Create an instructor account by registering with the instructor code, an admin account with the admin code. Trainee difficulty adapts to the Elo rating; the dashboard recommends a scenario for your rating.
+Create an instructor account by registering with the instructor code, or an admin account with the admin code. Email is optional; each account signs in with its username and password. The admin code is only for registration and is not a login credential. Trainee difficulty adapts to the Elo rating; the dashboard recommends a scenario for your rating.
 
 Signed-in dashboards include a persistent dark/light theme switch in the top navigation. The theme applies across trainee, instructor, admin, session, and review screens.
 

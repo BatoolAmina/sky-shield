@@ -25,14 +25,20 @@ test('action validation rejects malformed input', () => {
 test('REST: register/login, roles, scenario list, protected routes', async () => {
   const { api } = mk();
   assert.equal((await call(api, 'GET', '/api/me')).status, 401);
+  assert.deepEqual((await call(api, 'GET', '/api/auth/config')).body, { googleClientId: null, adminSignupEnabled: true });
   assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'a', password: 'longenough' })).status, 400);
   const reg = await call(api, 'POST', '/api/auth/register', { username: 'trainee1', email: 'trainee1@example.com', password: 'longenough' }); assert.equal(reg.status, 201); assert.equal(reg.body.user.role, 'trainee');
   assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'trainee1', password: 'longenough' })).status, 409);
   assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'sneaky', password: 'longenough', instructorCode: 'nope' })).status, 403);
   const ins = await call(api, 'POST', '/api/auth/register', { username: 'boss', password: 'longenough', instructorCode: 'code123' }); assert.equal(ins.body.user.role, 'instructor');
+  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'badadmin', password: 'longenough', adminCode: 'nope' })).status, 403);
+  const admin = await call(api, 'POST', '/api/auth/register', { username: 'admin1', password: 'longenough', adminCode: 'admin456' });
+  assert.equal(admin.body.user.role, 'admin');
+  assert.equal((await call(api, 'GET', '/api/admin/users', null, admin.body.token)).status, 200);
   assert.equal((await call(api, 'POST', '/api/auth/login', { username: 'trainee1', password: 'bad' })).status, 401);
   const login = await call(api, 'POST', '/api/auth/login', { username: 'trainee1', password: 'longenough' }); assert.equal(login.status, 200);
   assert.equal((await call(api, 'POST', '/api/auth/login', { username: 'TRAINEE1@example.com', password: 'longenough' })).status, 200);
+  assert.equal((await call(api, 'POST', '/api/auth/login', { username: 'admin1', password: 'longenough' })).status, 200);
   assert.equal((await call(api, 'GET', '/api/scenarios', null, login.body.token)).body.length, 6);
   assert.equal((await call(api, 'GET', '/api/analytics', null, login.body.token)).status, 403); assert.equal((await call(api, 'GET', '/api/analytics', null, ins.body.token)).status, 200);
 });

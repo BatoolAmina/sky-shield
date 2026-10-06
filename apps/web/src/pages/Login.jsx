@@ -4,10 +4,11 @@ import { req, auth } from '../api.js';
 
 export default function Login({ mode, onAuth, go }) {
   const isSignup = mode === 'signup';
-  const [form, setForm] = useState({ displayName: '', username: '', email: '', password: '', confirmPassword: '', instructorCode: '' });
+  const [form, setForm] = useState({ displayName: '', username: '', email: '', password: '', confirmPassword: '', instructorCode: '', adminCode: '' });
   const [showPassword, setShowPassword] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const [theme, setTheme] = useState(() => window.localStorage.getItem('skyshield-theme') === 'light' ? 'light' : 'dark');
   const [googleClientId, setGoogleClientId] = useState('');
+  const [adminSignupEnabled, setAdminSignupEnabled] = useState(false);
   const googleButton = useRef(null), authCallback = useRef(null);
   const update = (field) => (event) => setForm((current) => ({ ...current, [field]: event.target.value }));
   const finishAuth = (user) => { onAuth(user); go('/'); };
@@ -20,7 +21,12 @@ export default function Login({ mode, onAuth, go }) {
 
   useEffect(() => {
     let active = true;
-    req('GET', '/auth/config').then((config) => { if (active) setGoogleClientId(config.googleClientId ?? ''); }).catch(() => {});
+    req('GET', '/auth/config').then((config) => {
+      if (active) {
+        setGoogleClientId(config.googleClientId ?? '');
+        setAdminSignupEnabled(Boolean(config.adminSignupEnabled));
+      }
+    }).catch(() => {});
     return () => { active = false; };
   }, []);
 
@@ -82,7 +88,7 @@ export default function Login({ mode, onAuth, go }) {
     setBusy(true);
     try {
       const payload = isSignup
-        ? { username: form.username.trim(), email: form.email.trim(), displayName: form.displayName.trim(), password: form.password, ...(form.instructorCode.trim() ? { instructorCode: form.instructorCode.trim() } : {}) }
+        ? { username: form.username.trim(), email: form.email.trim(), displayName: form.displayName.trim(), password: form.password, ...(form.instructorCode.trim() ? { instructorCode: form.instructorCode.trim() } : {}), ...(form.adminCode.trim() ? { adminCode: form.adminCode.trim() } : {}) }
         : { username: form.username.trim(), password: form.password };
       const result = await req('POST', `/auth/${isSignup ? 'register' : 'login'}`, payload);
       auth.set(result.token);
@@ -109,11 +115,11 @@ export default function Login({ mode, onAuth, go }) {
             <div className={isSignup ? 'auth-fields auth-fields-signup' : 'auth-fields'}>
               {isSignup && <label>Full name <input autoComplete="name" placeholder="Your name" maxLength="80" value={form.displayName} onChange={update('displayName')} /></label>}
               <label>{isSignup ? 'Username' : 'Username or email'} <input autoComplete="username" required minLength={isSignup ? 3 : undefined} maxLength={isSignup ? 32 : 254} pattern={isSignup ? '[A-Za-z0-9_.-]{3,32}' : undefined} title={isSignup ? 'Use 3-32 letters, numbers, dots, underscores or hyphens.' : undefined} placeholder={isSignup ? 'Choose a username' : 'Username or email address'} value={form.username} onChange={update('username')} /></label>
-              {isSignup && <label className="auth-field-wide">Email address <input type="email" autoComplete="email" required maxLength="254" placeholder="you@example.com" value={form.email} onChange={update('email')} /></label>}
+              {isSignup && <label className="auth-field-wide">Email address (optional) <input type="email" autoComplete="email" maxLength="254" placeholder="you@example.com" value={form.email} onChange={update('email')} /></label>}
               <label>Password <span className="password-field"><input type={showPassword ? 'text' : 'password'} autoComplete={isSignup ? 'new-password' : 'current-password'} required minLength={isSignup ? 8 : undefined} placeholder={isSignup ? '8 characters minimum' : 'Enter your password'} value={form.password} onChange={update('password')} /><button className="password-toggle" type="button" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? 'Hide' : 'Show'}</button></span></label>
               {isSignup && <label>Confirm password <input type={showPassword ? 'text' : 'password'} autoComplete="new-password" required minLength="8" placeholder="Re-enter password" value={form.confirmPassword} onChange={update('confirmPassword')} /></label>}
             </div>
-            {isSignup && <details className="instructor-option"><summary>Have an instructor access code?</summary><label>Instructor code <input autoComplete="off" placeholder="Optional access code" value={form.instructorCode} onChange={update('instructorCode')} /></label></details>}
+            {isSignup && <details className="instructor-option"><summary>Have a staff access code?</summary><label>Instructor code <input autoComplete="off" placeholder="Optional access code" value={form.instructorCode} onChange={update('instructorCode')} /></label>{adminSignupEnabled && <label>Admin code <input autoComplete="off" placeholder="Optional admin access code" value={form.adminCode} onChange={update('adminCode')} /></label>}</details>}
             {error && <div className="auth-error" role="alert"><span>!</span>{error}</div>}
             <button className="button button-primary auth-submit" type="submit" disabled={busy}>{busy ? 'Please wait…' : isSignup ? 'Create account' : 'Sign in'} <span aria-hidden="true">↗</span></button>
           </form>
