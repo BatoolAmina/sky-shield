@@ -36,10 +36,9 @@ export default function Instructor() {
   useEffect(() => {
     refresh();
     const stopWatching = watchDashboard(refresh, setRealtime);
-    const timer = window.setInterval(refresh, 15000);
     const onFocus = () => refresh();
     window.addEventListener('focus', onFocus);
-    return () => { stopWatching(); window.clearInterval(timer); window.removeEventListener('focus', onFocus); };
+    return () => { stopWatching(); window.removeEventListener('focus', onFocus); };
   }, [refresh]);
 
   useEffect(() => {

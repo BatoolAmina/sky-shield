@@ -63,10 +63,9 @@ export default function Admin() {
   useEffect(() => {
     load();
     const stopWatching = watchDashboard(load, setRealtime);
-    const timer = window.setInterval(load, 30000);
     const onFocus = () => load();
     window.addEventListener('focus', onFocus);
-    return () => { stopWatching(); window.clearInterval(timer); window.removeEventListener('focus', onFocus); };
+    return () => { stopWatching(); window.removeEventListener('focus', onFocus); };
   }, [load]);
   useEffect(() => {
     if (!selected) return;

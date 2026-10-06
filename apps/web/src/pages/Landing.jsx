@@ -170,7 +170,7 @@ export default function Landing() {
   const [theme, setTheme] = useState(() => window.localStorage.getItem('skyshield-theme') === 'light' ? 'light' : 'dark');
   const [content, setContent] = useState(null);
   const [scenarios, setScenarios] = useState(SCENARIOS);
-  const [contentError, setContentError] = useState('');
+  const [featuredScenarioId, setFeaturedScenarioId] = useState(SCENARIOS[0].id);
   const [activeSection, setActiveSection] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -189,7 +189,7 @@ export default function Landing() {
         setScenarios(scenarioList);
       })
       .catch((error) => {
-        if (active) setContentError(`Some live site content could not be loaded: ${error.message}`);
+        if (active) console.error('Landing content could not be loaded; showing built-in defaults.', error);
       });
     return () => { active = false; };
   }, []);
@@ -239,7 +239,8 @@ export default function Landing() {
   const themeLabel = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
 
   const site = content ?? {};
-  const featuredScenario = scenarios[0] ?? SCENARIOS[0];
+  const featuredScenario = scenarios.find((scenario) => scenario.id === featuredScenarioId) ?? scenarios[0] ?? SCENARIOS[0];
+  const featuredScenarioNumber = scenarios.findIndex((scenario) => scenario.id === featuredScenario.id) + 1;
   return <div className="landing-experience min-h-screen overflow-hidden bg-night font-sans text-white selection:bg-mint/30 selection:text-white" data-theme={theme}>
     <header id="top" className="landing-header z-50 animate-header-drop border-b border-white/[.07] bg-night/85 backdrop-blur-xl motion-reduce:animate-none">
       <div className="landing-progress" aria-hidden="true"><span ref={scrollProgressRef} /></div>
@@ -262,7 +263,6 @@ export default function Landing() {
       </nav>
     </header>
 
-    {contentError && <div className="landing-content-alert" role="status">{contentError}</div>}
     <main className="landing-main">
       <section className="landing-hero relative isolate overflow-hidden bg-aurora">
         <div className="mx-auto grid min-h-[650px] max-w-[1320px] items-center gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[.82fr_1.18fr] lg:gap-12 lg:px-12 lg:py-24">
@@ -320,7 +320,7 @@ export default function Landing() {
           <Reveal><div className="scenario-library-heading"><div><p className="text-[10px] font-semibold tracking-[.18em] text-mint">{site.scenariosEyebrow ?? 'THE SCENARIO LIBRARY'}</p><h2 className="mt-4 text-3xl font-medium tracking-[-.055em] sm:text-5xl">{site.scenariosHeading ?? 'Six briefs. One skill at a time.'}</h2></div><p className="max-w-[410px] text-sm leading-7 text-quiet">{site.scenariosDescription ?? 'Practice with seeded situations: a low-flying intruder, a flock hiding a swarm, or a decoy drawing attention from the real threat.'}</p></div></Reveal>
           <div className="scenario-library">
             <Reveal className="min-w-0"><article className="scenario-featured">
-              <div className="scenario-featured-index">01 <span>/ {String(scenarios.length).padStart(2, '0')}</span></div>
+              <div className="scenario-featured-index">{String(featuredScenarioNumber).padStart(2, '0')} <span>/ {String(scenarios.length).padStart(2, '0')}</span></div>
               <div className="scenario-featured-copy">
                 <div className="scenario-meta"><span>LEVEL {featuredScenario.difficulty}</span><span>{Math.round(featuredScenario.durationS / 60)} MIN</span></div>
                 <h3>{featuredScenario.name}</h3>
@@ -330,12 +330,14 @@ export default function Landing() {
               <div className="scenario-featured-note"><span>THE CHALLENGE</span><b>One uncertain track.<br />Several plausible explanations.</b><small>Learn to wait for evidence before you act.</small></div>
             </article></Reveal>
             <div className="scenario-list" aria-label="More training briefs">
-              {scenarios.slice(1).map((scenario, index) => {
-                const number = index + 2;
+              {scenarios.filter((scenario) => scenario.id !== featuredScenario.id).map((scenario, index) => {
+                const number = scenarios.findIndex((item) => item.id === scenario.id) + 1;
                 const delay = ['delay-100', 'delay-200', 'delay-300'][index % 3];
                 return <Reveal key={scenario.id} delay={delay}><article className="scenario-list-item">
-                  <span className="scenario-list-number">{String(number).padStart(2, '0')}</span>
-                  <div className="scenario-list-copy"><div className="scenario-meta"><span>{scenario.adaptive ? 'ADAPTIVE' : `LEVEL ${scenario.difficulty}`}</span><span>{Math.round(scenario.durationS / 60)} MIN</span></div><h3>{scenario.name}</h3><p>{scenario.brief}</p></div>
+                  <button type="button" className="scenario-list-select" onClick={() => setFeaturedScenarioId(scenario.id)} aria-label={`Show ${scenario.name} as the featured scenario`}>
+                    <span className="scenario-list-number">{String(number).padStart(2, '0')}</span>
+                    <span className="scenario-list-copy"><span className="scenario-meta"><span>{scenario.adaptive ? 'ADAPTIVE' : `LEVEL ${scenario.difficulty}`}</span><span>{Math.round(scenario.durationS / 60)} MIN</span></span><span className="scenario-list-title">{scenario.name}</span><span className="scenario-list-brief">{scenario.brief}</span></span>
+                  </button>
                   <a href="#/signup" aria-label={`Practice ${scenario.name}`}><Icon name="arrow" size={16} /></a>
                 </article></Reveal>;
               })}
