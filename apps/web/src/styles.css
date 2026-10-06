@@ -108,7 +108,7 @@ html{scroll-behavior:smooth}
 .auth-form-side{display:flex;flex-direction:column;justify-content:center;position:relative;padding:56px clamp(30px,5.5vw,72px) 64px}
 .auth-form-wrap{width:100%;max-width:370px;margin:0 auto}
 .auth-title{margin-bottom:24px}.auth-kicker{color:var(--mint);font-size:8px;font-weight:700;letter-spacing:.16em}.auth-title h2{margin:9px 0 5px;color:#edf4ed;font-size:25px;font-weight:550;letter-spacing:-.035em}.auth-title p{margin:0;color:#8da49a;font-size:10px}
-.google-slot{min-height:40px;width:100%;display:flex;justify-content:center}.google-slot iframe{max-width:100%}
+.google-slot{min-height:40px;width:100%;min-width:0;display:flex;justify-content:center}.google-slot iframe{display:block;max-width:100%}
 .google-config-note{margin:7px 0 0;text-align:center;color:#738d82;font-size:8px}
 .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:#71877e;font-size:8px;white-space:nowrap}.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--edge)}
 .auth-form{display:flex;flex-direction:column;gap:13px}
