@@ -13,6 +13,14 @@ export default function Login({ mode, onAuth, go }) {
   const update = (field) => (event) => setForm((current) => ({ ...current, [field]: event.target.value }));
   const finishAuth = (user) => { onAuth(user); go('/'); };
   const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
+  const handleGoogleSignIn = () => {
+    if (!window.google?.accounts?.id) return;
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        setError('Google sign-in is unavailable right now. Please use your email instead.');
+      }
+    });
+  };
   authCallback.current = finishAuth;
 
   useEffect(() => {
@@ -48,15 +56,25 @@ export default function Login({ mode, onAuth, go }) {
           } catch (e) { setError(e.message); }
           finally { setBusy(false); }
         },
+        auto_select: false,
+        cancel_on_tap_outside: true,
       });
       let renderedWidth = 0;
       const renderButton = () => {
         if (!active || !googleButton.current) return;
-        const width = Math.max(180, Math.min(380, googleButton.current.clientWidth - 4));
+        const width = Math.max(220, Math.min(380, googleButton.current.clientWidth - 4));
         if (width === renderedWidth) return;
         renderedWidth = width;
         googleButton.current.replaceChildren();
-        window.google.accounts.id.renderButton(googleButton.current, { theme: theme === 'dark' ? 'filled_black' : 'outline', size: 'large', shape: 'pill', text: 'continue_with', width });
+        window.google.accounts.id.renderButton(googleButton.current, {
+          theme: theme === 'dark' ? 'filled_black' : 'outline',
+          size: 'large',
+          shape: 'pill',
+          text: 'continue_with',
+          width,
+          logo_alignment: 'left',
+          type: 'standard',
+        });
       };
       renderButton();
       if ('ResizeObserver' in window) {
@@ -110,7 +128,20 @@ export default function Login({ mode, onAuth, go }) {
         <div className="auth-form-wrap">
           <div className="auth-mobile-brand"><Brand /></div>
           <div className="auth-title"><span className="auth-kicker">{isSignup ? 'YOUR TRAINING JOURNEY' : 'WELCOME BACK'}</span><h2>{isSignup ? 'Create your account' : 'Sign in to SkyShield'}</h2><p>{isSignup ? 'A sharper read on every situation starts here.' : 'Pick up where your next decision begins.'}</p></div>
-          {googleClientId && <><div className="google-slot" ref={googleButton} /><div className="auth-divider"><span>or continue with email</span></div></>}
+          {googleClientId && <>
+            <button type="button" className="google-signin-button" onClick={handleGoogleSignIn} aria-label="Continue with Google">
+              <span className="google-signin-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                  <path fill="#EA4335" d="M12 10.2v3.9h5.4c-.2 1.5-1.8 4.3-5.4 4.3-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.2.8 4 1.5l2.7-2.7C16.9 3.2 14.7 2.2 12 2.2 6.8 2.2 2.5 6.5 2.5 11.7S6.8 21.2 12 21.2c6.9 0 11.5-4.8 11.5-11.6 0-.8-.1-1.4-.2-2H12z"/>
+                  <path fill="#34A853" d="M3.7 7.2l3.3 2.4c.9-1.7 2.8-2.9 4.9-2.9 1.9 0 3.2.8 4 1.5l2.7-2.7C16.9 3.2 14.7 2.2 12 2.2 8.1 2.2 4.8 4.5 3.7 7.2z"/>
+                  <path fill="#FBBC05" d="M3.7 16.2c1.1 2.7 4.4 4.5 8.3 4.5 2.4 0 4.4-.8 5.9-2.2l-2.9-2.4c-.8.5-1.8.9-3 .9-2.6 0-4.8-1.8-5.4-4.2l-3 2.4z"/>
+                  <path fill="#4285F4" d="M12 21.2c2.4 0 4.4-.8 5.9-2.2l-2.9-2.4c-.8.5-1.8.9-3 .9-2.6 0-4.8-1.8-5.4-4.2l-3 2.4C3.1 18 7.1 21.2 12 21.2z"/>
+                </svg>
+              </span>
+              <span className="google-signin-text">Continue with Google</span>
+            </button>
+            <div className="auth-divider"><span>or continue with email</span></div>
+          </>}
           <form className="auth-form" onSubmit={submit}>
             <div className={isSignup ? 'auth-fields auth-fields-signup' : 'auth-fields'}>
               {isSignup && <label>Full name <input autoComplete="name" placeholder="Your name" maxLength="80" value={form.displayName} onChange={update('displayName')} /></label>}
