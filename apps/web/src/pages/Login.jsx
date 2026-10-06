@@ -54,12 +54,12 @@ export default function Login({ mode, onAuth, go }) {
       let renderedWidth = 0;
       const renderButton = () => {
         if (!active || !googleButton.current) return;
-        const width = Math.max(300, Math.min(420, googleButton.current.clientWidth || 360));
+        const width = Math.min(400, Math.floor(googleButton.current.clientWidth || 360));
         if (width === renderedWidth) return;
         renderedWidth = width;
         googleButton.current.replaceChildren();
         window.google.accounts.id.renderButton(googleButton.current, {
-          theme: 'outline',
+          theme: theme === 'dark' ? 'filled_black' : 'outline',
           size: 'large',
           shape: 'pill',
           text: 'continue_with',
