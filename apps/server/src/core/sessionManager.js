@@ -27,15 +27,11 @@ const isStaff = (u) => u.role === 'instructor' || u.role === 'admin';
 const SPAWN_KINDS = new Set(['surveillance', 'fast', 'low', 'swarm', 'bird', 'friendly', 'civil']);
 
 export class SessionManager {
-  constructor({ store, model = null, tickMs = 200, ticksPerStep = 4, idleMs = 5 * 60 * 1000 }) { this.store = store; this.model = model; this.tickMs = tickMs; this.ticksPerStep = ticksPerStep; this.idleMs = idleMs; this.live = new Map(); this.dashboardEvents = new EventEmitter(); this.dashboardEvents.setMaxListeners(0); this.progressPushAt = new Map(); }
+  constructor({ store, model = null, tickMs = 200, ticksPerStep = 4, idleMs = 5 * 60 * 1000 }) { this.store = store; this.model = model; this.tickMs = tickMs; this.ticksPerStep = ticksPerStep; this.idleMs = idleMs; this.live = new Map(); this.dashboardEvents = new EventEmitter(); this.dashboardEvents.setMaxListeners(0); }
   subscribeDashboard(listener) { this.dashboardEvents.on('change', listener); return () => this.dashboardEvents.off('change', listener); }
   notifyDashboard(event = {}) {
-    const at = Date.now();
-    if (event.kind === 'session-progress' && event.userId) {
-      if (at - (this.progressPushAt.get(event.userId) ?? 0) < 1000) return;
-      this.progressPushAt.set(event.userId, at);
-    }
-    this.dashboardEvents.emit('change', { at, ...event });
+    if (event.kind === 'session-progress') return;
+    this.dashboardEvents.emit('change', { at: Date.now(), ...event });
   }
 
   async create(user, { scenarioId, scenario: configuredScenario, seed, speed = 1, autoRun = true, options = {} }) {
@@ -81,7 +77,7 @@ export class SessionManager {
     if (live.bandit) { live.bandit.update(TACTICS.indexOf(live.tactic), s.world.events.some((e) => e.type === 'impact') ? 1 : 0); await this.store.upsert('bandits', { userId: live.user._id }, { state: live.bandit.toJSON() }); }
     live.report = { score, aar, rating: newRating, previousRating: rating, tactic: live.tactic };
     await this.store.update('sessions', live.id, { status: 'finished', finishedAt: Date.now(), score, aar, rating: newRating, log: s.log, frames: live.frames, coachNotes: live.coachNotes, durationS: s.t, impacts: score.stats.impacts, tactic: live.tactic, cfg: { seed: live.seed, scenarioId: live.scenarioId, extraEvents: live.cfg.extraEvents ?? null, overrides: live.cfg.scenario.overrides } });
-    for (const sub of [...live.subs, ...live.obs]) sub({ type: 'ended', report: live.report }); this.live.delete(live.id); this.progressPushAt.delete(live.user._id); this.notifyDashboard({ userId: live.user._id, kind: 'session-finished' }); return live.report;
+    for (const sub of [...live.subs, ...live.obs]) sub({ type: 'ended', report: live.report }); this.live.delete(live.id); this.notifyDashboard({ userId: live.user._id, kind: 'session-finished' }); return live.report;
   }
   /** Attach a websocket-like connection. mode 'play' (owner) or 'observe' (instructor). `send` receives JSON-able messages. */
   attach({ user, sessionId, mode = 'play', send }) {

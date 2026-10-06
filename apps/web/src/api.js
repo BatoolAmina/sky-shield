@@ -33,7 +33,7 @@ export function watchDashboard(onRefresh, onStatus = () => {}) {
     socket.onopen = () => { retryDelay = 500; onStatus(true); };
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      if (message.type !== 'refresh') return;
+      if (message.type !== 'refresh' || message.kind === 'session-progress') return;
       clearTimeout(refreshTimer);
       refreshTimer = window.setTimeout(onRefresh, 120);
     };

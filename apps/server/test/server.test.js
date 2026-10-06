@@ -119,6 +119,8 @@ test('instructor sees all sessions while trainee history remains account-scoped'
   assert.equal(typeof initialDashboard.body.model.available, 'boolean');
   const dashboardEvents = [];
   const unsubscribe = manager.subscribeDashboard((event) => dashboardEvents.push(event));
+  manager.notifyDashboard({ userId: trainee.body.user.id, kind: 'session-progress' });
+  assert.equal(dashboardEvents.length, 0, 'session progress must not trigger dashboard reloads');
   const run = await call(api, 'POST', '/api/sessions', { scenarioId: 'lone-observer' }, trainee.body.token);
   const live = manager.live.get(run.body.id);
   clearInterval(live.timer);
