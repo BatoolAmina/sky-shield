@@ -98,11 +98,12 @@ export function createApi({ store, manager, config, modelSummary = null, googleV
     if (!/^[a-zA-Z0-9_.-]{3,32}$/.test(username ?? '')) throw err(400, 'username must be 3-32 chars (letters, digits, _ . -)');
     if (typeof password !== 'string' || password.length < 8) throw err(400, 'password must be at least 8 characters');
     const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
-    if (normalizedEmail && (normalizedEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail))) throw err(400, 'enter a valid email address');
+    if (!normalizedEmail) throw err(400, 'email is required');
+    if (normalizedEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) throw err(400, 'enter a valid email address');
     if (await store.findOne('users', { username })) throw err(409, 'username taken');
-    if (normalizedEmail && await store.findOne('users', { email: normalizedEmail })) throw err(409, 'email already in use');
+    if (await store.findOne('users', { email: normalizedEmail })) throw err(409, 'email already in use');
     const role = adminCode ? (config.adminCode && adminCode === config.adminCode ? 'admin' : (() => { throw err(403, 'bad admin code'); })()) : instructorCode ? (instructorCode === config.instructorCode ? 'instructor' : (() => { throw err(403, 'bad instructor code'); })()) : 'trainee';
-    const u = await store.insert('users', { username, ...(normalizedEmail ? { email: normalizedEmail } : {}), ...(typeof displayName === 'string' && displayName.trim() ? { displayName: displayName.trim().slice(0, 80) } : {}), passwordHash: await hashPassword(password), role, rating: 1000, history: [], createdAt: Date.now() });
+    const u = await store.insert('users', { username, email: normalizedEmail, ...(typeof displayName === 'string' && displayName.trim() ? { displayName: displayName.trim().slice(0, 80) } : {}), passwordHash: await hashPassword(password), role, rating: 1000, history: [], createdAt: Date.now() });
     return { token: tokenFor(u), user: pub(u) };
   }, { auth: false, status: 201 });
   route('POST', '/api/auth/login', async ({ body, ip }) => {

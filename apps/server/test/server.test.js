@@ -28,11 +28,12 @@ test('REST: register/login, roles, scenario list, protected routes', async () =>
   assert.deepEqual((await call(api, 'GET', '/api/auth/config')).body, { googleClientId: null, adminSignupEnabled: true });
   assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'a', password: 'longenough' })).status, 400);
   const reg = await call(api, 'POST', '/api/auth/register', { username: 'trainee1', email: 'trainee1@example.com', password: 'longenough' }); assert.equal(reg.status, 201); assert.equal(reg.body.user.role, 'trainee');
-  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'trainee1', password: 'longenough' })).status, 409);
-  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'sneaky', password: 'longenough', instructorCode: 'nope' })).status, 403);
-  const ins = await call(api, 'POST', '/api/auth/register', { username: 'boss', password: 'longenough', instructorCode: 'code123' }); assert.equal(ins.body.user.role, 'instructor');
-  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'badadmin', password: 'longenough', adminCode: 'nope' })).status, 403);
-  const admin = await call(api, 'POST', '/api/auth/register', { username: 'admin1', password: 'longenough', adminCode: 'admin456' });
+  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'nomail', password: 'longenough' })).status, 400);
+  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'trainee1', email: 'trainee1@example.com', password: 'longenough' })).status, 409);
+  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'sneaky', email: 'sneaky@example.com', password: 'longenough', instructorCode: 'nope' })).status, 403);
+  const ins = await call(api, 'POST', '/api/auth/register', { username: 'boss', email: 'boss@example.com', password: 'longenough', instructorCode: 'code123' }); assert.equal(ins.body.user.role, 'instructor');
+  assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'badadmin', email: 'badadmin@example.com', password: 'longenough', adminCode: 'nope' })).status, 403);
+  const admin = await call(api, 'POST', '/api/auth/register', { username: 'admin1', email: 'admin1@example.com', password: 'longenough', adminCode: 'admin456' });
   assert.equal(admin.body.user.role, 'admin');
   assert.equal((await call(api, 'GET', '/api/admin/users', null, admin.body.token)).status, 200);
   assert.equal((await call(api, 'POST', '/api/auth/login', { username: 'trainee1', password: 'bad' })).status, 401);
@@ -60,7 +61,7 @@ test('dashboard data and session creation require authentication', async () => {
 });
 test('admin website content and scenario edits are validated, persisted, and consumed by new sessions', async () => {
   const { api, manager, store } = mk();
-  const created = await call(api, 'POST', '/api/auth/register', { username: 'siteadmin', password: 'longenough', adminCode: 'admin456' });
+  const created = await call(api, 'POST', '/api/auth/register', { username: 'siteadmin', email: 'siteadmin@example.com', password: 'longenough', adminCode: 'admin456' });
   const token = created.body.token;
   await store.upsert('settings', { key: 'site-content' }, { value: {
     heroKicker: 'A decision simulator built around the hard parts',
@@ -108,8 +109,8 @@ test('admin website content and scenario edits are validated, persisted, and con
 });
 test('instructor sees all sessions while trainee history remains account-scoped', async () => {
   const { api, manager } = mk();
-  const trainee = await call(api, 'POST', '/api/auth/register', { username: 'pilot-one', password: 'longenough' });
-  const instructor = await call(api, 'POST', '/api/auth/register', { username: 'coach-one', password: 'longenough', instructorCode: 'code123' });
+  const trainee = await call(api, 'POST', '/api/auth/register', { username: 'pilot-one', email: 'pilot-one@example.com', password: 'longenough' });
+  const instructor = await call(api, 'POST', '/api/auth/register', { username: 'coach-one', email: 'coach-one@example.com', password: 'longenough', instructorCode: 'code123' });
   const initialDashboard = await call(api, 'GET', '/api/dashboard', null, trainee.body.token);
   assert.equal(initialDashboard.body.completedRuns, 0);
   assert.equal(initialDashboard.body.scenariosExplored, 0);
@@ -150,8 +151,8 @@ test('Google sign-in validates credentials, provisions users, and avoids implici
   assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'pilot2', email: 'PILOT@example.com', password: 'longenough' })).status, 409);
 });
 test('full session lifecycle through the manager: play, act, finish, report, Elo, replay, access control', async () => {
-  const { api, manager, store } = mk(), tok = (await call(api, 'POST', '/api/auth/register', { username: 'pilot', password: 'longenough' })).body.token;
-  const ins = (await call(api, 'POST', '/api/auth/register', { username: 'teach', password: 'longenough', instructorCode: 'code123' })).body.token, other = (await call(api, 'POST', '/api/auth/register', { username: 'other', password: 'longenough' })).body.token;
+  const { api, manager, store } = mk(), tok = (await call(api, 'POST', '/api/auth/register', { username: 'pilot', email: 'pilot@example.com', password: 'longenough' })).body.token;
+  const ins = (await call(api, 'POST', '/api/auth/register', { username: 'teach', email: 'teach@example.com', password: 'longenough', instructorCode: 'code123' })).body.token, other = (await call(api, 'POST', '/api/auth/register', { username: 'other', email: 'other@example.com', password: 'longenough' })).body.token;
   const c = await call(api, 'POST', '/api/sessions', { scenarioId: 'lone-observer', seed: 7 }, tok); assert.equal(c.status, 201);
   const live = manager.live.get(c.body.id); clearInterval(live.timer); live.timer = null;       // manual stepping
   const user = await api.userFrom({ authorization: `Bearer ${tok}` }), msgs = []; const conn = manager.attach({ user, sessionId: c.body.id, send: (m) => msgs.push(m) });
@@ -186,9 +187,9 @@ test('mentor model (if exported) integrates: tracks carry class probabilities an
 });
 
 test('admin role: needs the admin code, can list users and change roles; staff routes accept admins', async () => {
-  const { api } = mk(); assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'fakeadmin', password: 'longenough', adminCode: 'x' })).status, 403);
-  const ad = await call(api, 'POST', '/api/auth/register', { username: 'root1', password: 'longenough', adminCode: 'admin456' }); assert.equal(ad.body.user.role, 'admin');
-  const tr = await call(api, 'POST', '/api/auth/register', { username: 'student', password: 'longenough' });
+  const { api } = mk(); assert.equal((await call(api, 'POST', '/api/auth/register', { username: 'fakeadmin', email: 'fakeadmin@example.com', password: 'longenough', adminCode: 'x' })).status, 403);
+  const ad = await call(api, 'POST', '/api/auth/register', { username: 'root1', email: 'root1@example.com', password: 'longenough', adminCode: 'admin456' }); assert.equal(ad.body.user.role, 'admin');
+  const tr = await call(api, 'POST', '/api/auth/register', { username: 'student', email: 'student@example.com', password: 'longenough' });
   assert.equal((await call(api, 'GET', '/api/admin/users', null, tr.body.token)).status, 403); const list = await call(api, 'GET', '/api/admin/users', null, ad.body.token); assert.equal(list.body.length, 2);
   assert.equal((await call(api, 'GET', '/api/admin/sessions', null, tr.body.token)).status, 403);
   assert.equal((await call(api, 'GET', '/api/admin/sessions', null, ad.body.token)).status, 200);
@@ -200,12 +201,12 @@ test('admin role: needs the admin code, can list users and change roles; staff r
 test('adaptive difficulty: higher rating -> more noise, clutter and distractors; scenario recommendation tracks rating', async () => {
   const lo = difficultyFor(700), hi = difficultyFor(1600); assert.ok(hi.noiseScale > lo.noiseScale && hi.clutterScale > lo.clutterScale && hi.extra.length > lo.extra.length);
   assert.ok(recommendScenario(800).difficulty < recommendScenario(1700).difficulty);
-  const { api, manager, store } = mk(), tok = (await call(api, 'POST', '/api/auth/register', { username: 'adapt', password: 'longenough' })).body.token; const rec = await call(api, 'GET', '/api/recommend', null, tok); assert.equal(rec.status, 200); assert.ok(rec.body.scenarioId);
+  const { api, manager, store } = mk(), tok = (await call(api, 'POST', '/api/auth/register', { username: 'adapt', email: 'adapt@example.com', password: 'longenough' })).body.token; const rec = await call(api, 'GET', '/api/recommend', null, tok); assert.equal(rec.status, 200); assert.ok(rec.body.scenarioId);
   const u = await store.findOne('users', { username: 'adapt' }); await store.update('users', u._id, { rating: 1600 }); const r = await manager.create({ ...u, rating: 1600 }, { scenarioId: 'lone-observer', seed: 5, autoRun: false });
   const live = manager.live.get(r.id); assert.ok(live.cfg.scenario.overrides.noiseScale > 1); assert.ok(live.cfg.extraEvents.length >= 2);
 });
 test('instructor options are honoured, trainee options ignored; live commands (difficulty, sensor failure) are staff-only', async () => {
-  const { api, manager } = mk(), tt = (await call(api, 'POST', '/api/auth/register', { username: 'trn1', password: 'longenough' })).body.token, it = (await call(api, 'POST', '/api/auth/register', { username: 'inst1', password: 'longenough', instructorCode: 'code123' })).body.token;
+  const { api, manager } = mk(), tt = (await call(api, 'POST', '/api/auth/register', { username: 'trn1', email: 'trn1@example.com', password: 'longenough' })).body.token, it = (await call(api, 'POST', '/api/auth/register', { username: 'inst1', email: 'inst1@example.com', password: 'longenough', instructorCode: 'code123' })).body.token;
   const a = await call(api, 'POST', '/api/sessions', { scenarioId: 'lone-observer', seed: 9, options: { visibilityScale: 0.3 } }, tt), b = await call(api, 'POST', '/api/sessions', { scenarioId: 'lone-observer', seed: 9, options: { visibilityScale: 0.3, noiseScale: 2 } }, it);
   const la = manager.live.get(a.body.id), lb = manager.live.get(b.body.id); [la, lb].forEach((l) => { clearInterval(l.timer); l.timer = null; });
   assert.equal(la.cfg.scenario.overrides.visibilityScale, undefined); assert.equal(lb.cfg.scenario.overrides.visibilityScale, 0.3); assert.ok(lb.cfg.scenario.overrides.noiseScale >= 2);
